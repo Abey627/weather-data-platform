@@ -33,50 +33,68 @@ This project consists of a weather data aggregation API and frontend application
 - `/backend` - Django REST Framework API
 - `/frontend` - React frontend application
 
-## Getting Started
+## Docker-Only Development
+
+This project is designed for Docker-only development to ensure consistency and simplify setup. All development, testing, and deployment are done using Docker containers.
 
 ### Prerequisites
 
-- Python 3.10+ (for backend)
-- Node.js 16+ (for frontend)
-- PostgreSQL 14+
-- Redis 7+
-- Docker and Docker Compose (for containerized setup)
+- Docker
+- Docker Compose
 
-### Backend Setup
+No local installation of Python, Node.js, PostgreSQL, or Redis is required!
 
-The backend is a Django REST Framework application that provides the weather data API.
+### Getting Started
 
-```bash
-# Navigate to the backend directory
-cd backend
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/Abey627/weather-data-platform.git
+   cd weather-data-platform
+   ```
 
-# Install dependencies
-pip install -r requirements.txt
+2. Start the development environment:
+   ```bash
+   # On Linux/macOS
+   ./dev.sh up
+   
+   # On Windows PowerShell
+   .\dev.ps1 up
+   ```
 
-# Run migrations
-python manage.py migrate
+3. Access the services:
+   - Backend API: http://localhost:8000/
+   - API Documentation: http://localhost:8000/swagger/
+   - Database Admin: http://localhost:5050/ (Email: admin@example.com, Password: admin)
+   - Frontend (when implemented): http://localhost:3000/
 
-# Start the development server
-python manage.py runserver
-```
+### Development Commands
 
-For more details, see the [backend README](./backend/README.md).
-
-### Frontend Setup
-
-The frontend is a React application (to be implemented).
-
-### Docker Setup
-
-For a complete containerized setup with PostgreSQL and Redis:
+Use our convenient scripts to manage the development environment:
 
 ```bash
-# Build and start all services
-docker-compose up -d
+# Start all services
+./dev.sh up      # Linux/macOS
+.\dev.ps1 up     # Windows
 
-# To stop all services
-docker-compose down
+# Stop all services
+./dev.sh down    # Linux/macOS
+.\dev.ps1 down   # Windows
+
+# Run Django migrations
+./dev.sh migrate # Linux/macOS
+.\dev.ps1 migrate # Windows
+
+# View logs
+./dev.sh logs    # Linux/macOS
+.\dev.ps1 logs   # Windows
+
+# Run tests
+./dev.sh test-backend  # Linux/macOS
+.\dev.ps1 test-backend # Windows
+
+# Open a shell in the container
+./dev.sh bash-backend  # Linux/macOS
+.\dev.ps1 bash-backend # Windows
 ```
 
 ## API Documentation
@@ -85,3 +103,11 @@ API documentation is available at the following endpoints when the backend is ru
 
 - Swagger UI: http://localhost:8000/swagger/
 - ReDoc: http://localhost:8000/redoc/
+
+## Production Deployment
+
+For production deployment:
+
+```bash
+docker-compose -f docker-compose.prod.yml up -d
+```

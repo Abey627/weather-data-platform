@@ -14,41 +14,54 @@ This directory contains the Django REST Framework backend for the Weather Data P
 
 - `GET /api/weather/average?city={city}&days={X}`: Get the average temperature for a city over the past X days.
 
-## Setup Instructions
+## Docker-Only Development
 
-### Local Development
+This project is designed for Docker-only development to ensure consistency and simplify setup.
 
-1. Install required packages:
-   ```
-   pip install -r requirements.txt
-   ```
+### Running the Backend with Docker
 
-2. Set up the PostgreSQL database:
-   - Create a database named `weather_db`
-   - Update settings in `weatherapi/settings.py` if needed
+From the project root:
 
-3. Run migrations:
-   ```
-   python manage.py migrate
-   ```
+```bash
+# On Linux/macOS
+./dev.sh backend
 
-4. Start the development server:
-   ```
-   python manage.py runserver
-   ```
+# On Windows PowerShell
+.\dev.ps1 backend
+```
 
-### Using Docker
+This starts the backend service along with PostgreSQL and Redis.
 
-1. Make sure Docker and Docker Compose are installed
-2. From the project root, run:
-   ```
-   docker-compose up -d backend
-   ```
+### Development Commands
+
+Use our convenient scripts to manage the development environment:
+
+```bash
+# Run Django migrations
+./dev.sh migrate     # Linux/macOS
+.\dev.ps1 migrate    # Windows
+
+# View backend logs
+./dev.sh logs-backend    # Linux/macOS
+.\dev.ps1 logs-backend   # Windows
+
+# Run backend tests
+./dev.sh test-backend    # Linux/macOS
+.\dev.ps1 test-backend   # Windows
+
+# Open a Django shell
+./dev.sh shell           # Linux/macOS
+.\dev.ps1 shell          # Windows
+
+# Open a bash shell in the backend container
+./dev.sh bash-backend    # Linux/macOS
+.\dev.ps1 bash-backend   # Windows
+```
 
 ## API Documentation
 
 API documentation is available at:
-- Swagger UI: `/swagger/`
-- ReDoc: `/redoc/`
+- Swagger UI: `http://localhost:8000/swagger/`
+- ReDoc: `http://localhost:8000/redoc/`
 
 When the server is running, access these URLs to view and interact with the API documentation.
