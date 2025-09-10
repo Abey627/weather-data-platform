@@ -20,8 +20,6 @@
 - [x] Configure Swagger/OpenAPI for API documentation
 - [x] Set up basic unit test framework for API endpoints
 - [x] Implement logging and monitoring
-- [x] Refactor code for better organization and maintainability
-- [x] Clean up deprecated code and optimize backend structure
 
 ## Phase 3: Frontend Development (React)
 - [ ] Set up React application with create-react-app or Vite
@@ -54,7 +52,32 @@
 - [x] Create production Docker configuration
 - [ ] Set up CI/CD workflows for Docker
 
-## Phase 5: Documentation and Finalization
+## Phase 5: Monitoring and Observability with ELK Stack
+- [ ] Set up ELK Stack for centralized logging and monitoring:
+  - [ ] Add Elasticsearch service to Docker Compose
+  - [ ] Configure Logstash for log ingestion
+  - [ ] Set up Kibana for log visualization
+  - [ ] Create custom dashboards for application metrics
+- [ ] Integrate Django with ELK Stack:
+  - [ ] Update Django logging configuration
+  - [ ] Add required Python packages (python-logstash, python-json-logger)
+  - [ ] Create custom log formatters for structured logging
+  - [ ] Add contextual information to logs (request IDs, user info)
+- [ ] Create monitoring dashboards:
+  - [ ] API endpoint performance dashboard
+  - [ ] Error rate monitoring dashboard
+  - [ ] Weather query patterns dashboard
+  - [ ] Cache hit/miss ratio visualization
+- [ ] Set up alerting:
+  - [ ] Configure alerts for high error rates
+  - [ ] Set up notifications for external API failures
+  - [ ] Create alerts for slow response times
+- [ ] Documentation:
+  - [ ] Document ELK Stack setup and configuration
+  - [ ] Create runbook for common monitoring scenarios
+  - [ ] Add dashboard screenshots to documentation
+
+## Phase 6: Documentation and Finalization
 - [x] Complete API documentation
 - [x] Update README with comprehensive setup instructions
 - [ ] Add usage examples and screenshots
