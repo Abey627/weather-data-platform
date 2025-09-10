@@ -5,8 +5,9 @@ from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
 from .serializers import WeatherAverageRequestSerializer, WeatherAverageResponseSerializer
-from .services import WeatherService
-from datetime import datetime, timedelta
+from .integration.services.weather import WeatherService
+from .utils.date_utils import get_date_range
+from .utils.error_handlers import handle_api_exception
 
 class WeatherAverageView(APIView):
     """
@@ -25,40 +26,50 @@ class WeatherAverageView(APIView):
             500: "Internal server error"
         }
     )
+    @handle_api_exception
     def get(self, request):
         # Validate request parameters
         serializer = WeatherAverageRequestSerializer(data=request.query_params)
         if not serializer.is_valid():
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
         
+        # Get validated parameters
         city = serializer.validated_data['city']
         days = serializer.validated_data['days']
         
-        try:
-            # Get weather data
-            weather_data = WeatherService.get_historical_weather(city, days)
+        # Process the request
+        return self._process_weather_request(city, days)
             
-            # Calculate average temperature
-            avg_temp = WeatherService.calculate_average_temperature(weather_data)
+    def _process_weather_request(self, city, days):
+        """
+        Process weather request for a city and number of days
+        
+        Args:
+            city (str): City name
+            days (int): Number of days
             
-            # Prepare response
-            end_date = datetime.now().date()
-            start_date = end_date - timedelta(days=days)
-            
-            response_data = {
-                'city': city,
-                'average_temperature': avg_temp,
-                'days': days,
-                'start_date': start_date,
-                'end_date': end_date
-            }
-            
-            response_serializer = WeatherAverageResponseSerializer(data=response_data)
-            response_serializer.is_valid(raise_exception=True)
-            
-            return Response(response_serializer.data, status=status.HTTP_200_OK)
-            
-        except ValueError as e:
-            return Response({'error': str(e)}, status=status.HTTP_400_BAD_REQUEST)
-        except Exception as e:
-            return Response({'error': str(e)}, status=status.HTTP_500_INTERNAL_SERVER_ERROR)
+        Returns:
+            Response: Django REST framework response
+        """
+        # Get weather data
+        weather_data = WeatherService.get_historical_weather(city, days)
+        
+        # Calculate average temperature
+        avg_temp = WeatherService.calculate_average_temperature(weather_data)
+        
+        # Get date range
+        start_date, end_date = get_date_range(days)
+        
+        # Prepare and validate response
+        response_data = {
+            'city': city,
+            'average_temperature': avg_temp,
+            'days': days,
+            'start_date': start_date,
+            'end_date': end_date
+        }
+        
+        response_serializer = WeatherAverageResponseSerializer(data=response_data)
+        response_serializer.is_valid(raise_exception=True)
+        
+        return Response(response_serializer.data, status=status.HTTP_200_OK)

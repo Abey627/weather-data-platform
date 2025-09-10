@@ -1,5 +1,6 @@
 from rest_framework import serializers
 from .models import WeatherData
+from .utils.constants import MAX_DAYS_ALLOWED
 
 class WeatherDataSerializer(serializers.ModelSerializer):
     class Meta:
@@ -9,7 +10,7 @@ class WeatherDataSerializer(serializers.ModelSerializer):
 
 class WeatherAverageRequestSerializer(serializers.Serializer):
     city = serializers.CharField(max_length=100)
-    days = serializers.IntegerField(min_value=1, max_value=30)
+    days = serializers.IntegerField(min_value=1, max_value=MAX_DAYS_ALLOWED)
     
 class WeatherAverageResponseSerializer(serializers.Serializer):
     city = serializers.CharField()
