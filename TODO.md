@@ -21,6 +21,16 @@
 - [x] Set up basic unit test framework for API endpoints
 - [x] Implement logging and monitoring
 
+## Phase 2.1: Database Integration and Persistence
+- [x] Implement data persistence in PostgreSQL (store weather data fetched from API)
+- [x] Create endpoint to query historical weather data from database
+- [ ] Add database indexing for optimal query performance
+- [ ] Implement data pruning/archiving strategy for older records
+- [ ] Add database migration tests
+- [ ] Create admin interface customizations for weather data management
+- [ ] Implement data export functionality (CSV, JSON)
+- [ ] Add data visualization endpoints for historical trends
+
 ## Phase 3: Frontend Development (React)
 - [ ] Set up React application with create-react-app or Vite
 - [ ] Install necessary dependencies (Axios, React Router, etc.)
@@ -29,6 +39,8 @@
   - [ ] Days selection input
   - [ ] Results display
   - [ ] Loading indicators
+  - [ ] Historical data viewer
+  - [ ] Temperature trends charts
 - [ ] Implement API service to connect with backend
 - [ ] Add state management for application data
 - [ ] Implement error handling and user notifications
@@ -51,6 +63,7 @@
 - [x] Add pgAdmin for database management
 - [x] Create production Docker configuration
 - [ ] Set up CI/CD workflows for Docker
+- [ ] Add database backup and restore procedures
 
 ## Phase 5: Monitoring and Observability with ELK Stack
 - [ ] Set up ELK Stack for centralized logging and monitoring:
@@ -68,10 +81,13 @@
   - [ ] Error rate monitoring dashboard
   - [ ] Weather query patterns dashboard
   - [ ] Cache hit/miss ratio visualization
+  - [ ] Database query performance dashboard
+  - [ ] Data storage growth metrics
 - [ ] Set up alerting:
   - [ ] Configure alerts for high error rates
   - [ ] Set up notifications for external API failures
   - [ ] Create alerts for slow response times
+  - [ ] Monitor database connection pool
 - [ ] Documentation:
   - [ ] Document ELK Stack setup and configuration
   - [ ] Create runbook for common monitoring scenarios
@@ -85,3 +101,5 @@
 - [ ] Perform final testing and bug fixes
 - [x] Review code for optimization opportunities
 - [x] Refactor codebase and remove deprecated code
+- [ ] Document database schema and relationships
+- [ ] Add database performance tuning guidelines

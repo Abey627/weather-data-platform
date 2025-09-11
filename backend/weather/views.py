@@ -1,10 +1,16 @@
 from rest_framework import status
 from rest_framework.views import APIView
 from rest_framework.response import Response
+from rest_framework import generics
 from drf_yasg.utils import swagger_auto_schema
 from drf_yasg import openapi
 
-from .serializers import WeatherAverageRequestSerializer, WeatherAverageResponseSerializer
+from .models import WeatherData
+from .serializers import (
+    WeatherAverageRequestSerializer, 
+    WeatherAverageResponseSerializer,
+    WeatherDataSerializer
+)
 from .integration.services.weather import WeatherService
 from .utils.date_utils import get_date_range
 from .utils.error_handlers import handle_api_exception
@@ -73,3 +79,39 @@ class WeatherAverageView(APIView):
         response_serializer.is_valid(raise_exception=True)
         
         return Response(response_serializer.data, status=status.HTTP_200_OK)
+
+class WeatherDataListView(generics.ListAPIView):
+    """
+    API view to list historical weather data from the database
+    """
+    serializer_class = WeatherDataSerializer
+    
+    @swagger_auto_schema(
+        operation_description="Get historical weather data for a city",
+        manual_parameters=[
+            openapi.Parameter('city', openapi.IN_QUERY, description="City name (optional)", type=openapi.TYPE_STRING),
+            openapi.Parameter('start_date', openapi.IN_QUERY, description="Start date (YYYY-MM-DD)", type=openapi.TYPE_STRING),
+            openapi.Parameter('end_date', openapi.IN_QUERY, description="End date (YYYY-MM-DD)", type=openapi.TYPE_STRING),
+        ],
+    )
+    def get_queryset(self):
+        """
+        Filter the queryset based on query parameters
+        """
+        queryset = WeatherData.objects.all()
+        
+        # Apply filters if provided
+        city = self.request.query_params.get('city')
+        start_date = self.request.query_params.get('start_date')
+        end_date = self.request.query_params.get('end_date')
+        
+        if city:
+            queryset = queryset.filter(city__icontains=city)
+        
+        if start_date:
+            queryset = queryset.filter(date__gte=start_date)
+        
+        if end_date:
+            queryset = queryset.filter(date__lte=end_date)
+        
+        return queryset.order_by('-date')

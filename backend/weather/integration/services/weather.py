@@ -1,9 +1,11 @@
 import logging
+from datetime import datetime
 from weather.integration.services.geocoding import GeocodingService
 from weather.integration.clients.weather import WeatherClient
 from weather.utils.date_utils import get_date_range
 from weather.utils.cache_utils import CacheManager
 from weather.utils.constants import CACHE_TIMEOUT_HOUR
+from weather.models import WeatherData
 
 logger = logging.getLogger(__name__)
 
@@ -32,6 +34,17 @@ class WeatherService:
             # Calculate date range using utility function
             start_date, end_date = get_date_range(days)
             
+            # Try to get data from the database first
+            db_data = WeatherService.get_weather_from_db(city, start_date, end_date)
+            
+            # If we have complete data in the database, return it
+            if db_data and len(db_data) == days:
+                logger.info(f"Retrieved complete weather data for {city} from database")
+                return db_data
+            
+            # Otherwise, fetch from API
+            logger.info(f"Fetching weather data for {city} from external API")
+            
             # Use the Geocoding service to get coordinates for the city
             try:
                 coords = GeocodingService.get_coordinates(city)
@@ -52,7 +65,12 @@ class WeatherService:
                 )
                 
                 # Process the data
-                return WeatherService._process_weather_data(data)
+                processed_data = WeatherService._process_weather_data(data)
+                
+                # Store the data in the database for future use
+                WeatherService.store_weather_data(city, processed_data)
+                
+                return processed_data
                 
             except Exception as e:
                 logger.error(f"Error fetching weather data: {str(e)}")
@@ -78,6 +96,73 @@ class WeatherService:
         
         # Use list comprehension for more concise code
         return [{"date": dates[i], "temperature": temperatures[i]} for i in range(len(dates))]
+    
+    @staticmethod
+    def store_weather_data(city, temperature_data):
+        """
+        Store weather data in the database
+        
+        Args:
+            city (str): City name
+            temperature_data (list): List of temperature data
+            
+        Returns:
+            list: List of created or updated WeatherData objects
+        """
+        stored_data = []
+        
+        for item in temperature_data:
+            # Convert string date to datetime object if needed
+            date_obj = item["date"]
+            if isinstance(date_obj, str):
+                date_obj = datetime.strptime(date_obj, "%Y-%m-%d").date()
+                
+            # Use get_or_create to avoid duplicates based on unique_together constraint
+            weather_obj, created = WeatherData.objects.get_or_create(
+                city=city,
+                date=date_obj,
+                defaults={"temperature": item["temperature"]}
+            )
+            
+            # If the record already existed but the temperature is different, update it
+            if not created and weather_obj.temperature != item["temperature"]:
+                weather_obj.temperature = item["temperature"]
+                weather_obj.save()
+                
+            stored_data.append(weather_obj)
+            
+            if created:
+                logger.info(f"Created new weather record for {city} on {date_obj}")
+            else:
+                logger.info(f"Updated existing weather record for {city} on {date_obj}")
+                
+        return stored_data
+    
+    @staticmethod
+    def get_weather_from_db(city, start_date, end_date):
+        """
+        Get weather data from the database for a city and date range
+        
+        Args:
+            city (str): City name
+            start_date (date): Start date
+            end_date (date): End date
+            
+        Returns:
+            list: List of temperature data from the database
+        """
+        # Query the database for weather data for the city and date range
+        weather_data = WeatherData.objects.filter(
+            city=city,
+            date__gte=start_date,
+            date__lte=end_date
+        ).order_by('date')
+        
+        # Convert queryset to the same format as the API data
+        return [
+            {"date": data.date.strftime("%Y-%m-%d"), "temperature": data.temperature} 
+            for data in weather_data
+        ]
     
     @staticmethod
     def calculate_average_temperature(temperature_data):
