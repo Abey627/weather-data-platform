@@ -1,3 +1,4 @@
+````markdown
 # Weather Data Platform
 
 A comprehensive weather data aggregation system built with React and Django REST Framework, featuring historical weather data analysis and visualization.
@@ -32,8 +33,6 @@ This project consists of a weather data aggregation API and frontend application
 ## Repository Structure
 - `/backend` - Django REST Framework API
 - `/frontend` - React frontend application
-- `/docs` - Project documentation
-  - Check out the [Documentation Index](./docs/index.md) for comprehensive guides and information
 
 ## Docker-Only Development
 
@@ -147,17 +146,4 @@ For production deployment:
    docker-compose -f docker-compose.prod.yml up -d
    ```
 
-## Documentation
-
-The project documentation is organized in the `/docs` directory:
-
-- [Project Overview](./docs/project-overview.md) - Comprehensive overview of the project
-- [Backend Documentation](./docs/backend/README.md) - Backend API details and development guide
-- [Frontend Documentation](./docs/frontend/README.md) - Frontend application guide
-- [Project Plan](./docs/project-planning/project-plan.md) - Development phases and task tracking
-- [ELK Stack Implementation](./docs/infrastructure/elk-stack-implementation.md) - Monitoring setup guide
-- [Documentation Index](./docs/index.md) - Complete documentation directory
-
-For API documentation, visit the endpoints when the backend is running:
-- Swagger UI: http://localhost:8000/swagger/
-- ReDoc: http://localhost:8000/redoc/
+````

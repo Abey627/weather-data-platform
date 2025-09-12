@@ -1,3 +1,4 @@
+````markdown
 # ELK Stack Implementation Plan for Weather Data Platform
 
 This document outlines the detailed implementation plan for integrating the ELK Stack (Elasticsearch, Logstash, Kibana) with the Weather Data Platform for comprehensive logging, monitoring, and observability.
@@ -339,3 +340,5 @@ Create the following documentation:
 3. Alert response procedures
 4. Troubleshooting guide
 5. Log query examples for common scenarios
+
+````
