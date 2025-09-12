@@ -52,7 +52,17 @@ No local installation of Python, Node.js, PostgreSQL, or Redis is required!
    cd weather-data-platform
    ```
 
-2. Start the development environment:
+2. Set up environment variables:
+   ```bash
+   # On Linux/macOS
+   ./scripts/setup_env.sh
+   
+   # On Windows PowerShell
+   .\scripts\setup_env.ps1
+   ```
+   This will create a `.env` file from the `.env.example` template. **Make sure to update all passwords and sensitive information in the `.env` file before proceeding.**
+
+3. Start the development environment:
    ```bash
    # On Linux/macOS
    ./dev.sh up
@@ -61,10 +71,10 @@ No local installation of Python, Node.js, PostgreSQL, or Redis is required!
    .\dev.ps1 up
    ```
 
-3. Access the services:
+4. Access the services:
    - Backend API: http://localhost:8000/
    - API Documentation: http://localhost:8000/swagger/
-   - Database Admin: http://localhost:5050/ (Email: admin@example.com, Password: admin)
+   - Database Admin: http://localhost:5050/ (Login with credentials from your `.env` file)
    - Frontend (when implemented): http://localhost:3000/
 
 ### Development Commands
@@ -97,6 +107,21 @@ Use our convenient scripts to manage the development environment:
 .\dev.ps1 bash-backend # Windows
 ```
 
+## Environment Configuration
+
+The project uses environment variables for all sensitive information. The setup is managed through:
+
+- `.env` file for development (created from `.env.example` template)
+- `.env.prod` file for production (must be created manually before deployment)
+
+**Never commit environment files with actual credentials to the repository.**
+
+Key environment variables include:
+- Database credentials
+- Django secret key
+- API keys (if required)
+- Debug settings
+
 ## API Documentation
 
 API documentation is available at the following endpoints when the backend is running:
@@ -108,6 +133,14 @@ API documentation is available at the following endpoints when the backend is ru
 
 For production deployment:
 
-```bash
-docker-compose -f docker-compose.prod.yml up -d
-```
+1. Create a production environment file:
+   ```bash
+   cp .env.example .env.prod
+   ```
+
+2. Edit the `.env.prod` file with secure production values.
+
+3. Deploy the application:
+   ```bash
+   docker-compose -f docker-compose.prod.yml up -d
+   ```
