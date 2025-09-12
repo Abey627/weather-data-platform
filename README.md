@@ -133,6 +133,8 @@ API documentation is available at the following endpoints when the backend is ru
 - Swagger UI: http://localhost:8000/swagger/
 - ReDoc: http://localhost:8000/redoc/
 
+For detailed information about available API endpoints and examples, please refer to the [Backend API Reference](./docs/components/backend/api.md).
+
 ## Production Deployment
 
 For production deployment:

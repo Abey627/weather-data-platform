@@ -10,100 +10,61 @@ Authentication is not currently implemented. All endpoints are publicly accessib
 
 ### Weather Data Endpoints
 
-#### GET `/api/weather/{city}/`
-
-Retrieve weather data for a specific city.
-
-**Parameters:**
-
-- `city` (path parameter, required): The name of the city to fetch weather data for
-
-**Query Parameters:**
-
-- `days` (optional): Number of days to get historical data for. Default is 5.
-
-**Response:**
-
-```json
-{
-  "city": "New York",
-  "country": "United States",
-  "coordinates": {
-    "latitude": 40.7128,
-    "longitude": -74.006
-  },
-  "weather_data": [
-    {
-      "date": "2023-05-10",
-      "temperature": {
-        "min": 15.2,
-        "max": 22.8,
-        "avg": 18.5
-      },
-      "humidity": 65,
-      "wind_speed": 10.2,
-      "conditions": "Partly cloudy"
-    },
-    // Additional days...
-  ],
-  "aggregated": {
-    "avg_temperature": 19.2,
-    "min_temperature": 12.1,
-    "max_temperature": 25.3
-  }
-}
-```
-
-#### GET `/api/weather/{city}/average/`
+#### GET `/api/weather/average`
 
 Calculate the average temperature for a specific city over a specified number of days.
 
-**Parameters:**
-
-- `city` (path parameter, required): The name of the city to fetch weather data for
-
 **Query Parameters:**
 
-- `days` (optional): Number of days to calculate the average for. Default is 5.
+- `city` (required): The name of the city to fetch weather data for (e.g., "London")
+- `days` (required): Number of days to calculate the average for (e.g., 7)
 
 **Response:**
 
 ```json
 {
-  "city": "New York",
-  "country": "United States",
-  "period": "5 days",
-  "avg_temperature": 19.2,
-  "min_temperature": 12.1,
-  "max_temperature": 25.3
+  "city": "London",
+  "average_temperature": 20.75,
+  "days": 7,
+  "start_date": "2025-09-05",
+  "end_date": "2025-09-12"
 }
 ```
 
-### Location Endpoints
+#### GET `/api/weather/history`
 
-#### GET `/api/locations/search/`
-
-Search for cities that match a given query string.
+Retrieve historical weather data records from the database.
 
 **Query Parameters:**
 
-- `q` (required): The query string to search for cities
+- `city` (optional): Filter results by city name
+- `start_date` (optional): Filter results by start date (YYYY-MM-DD)
+- `end_date` (optional): Filter results by end date (YYYY-MM-DD)
 
 **Response:**
 
 ```json
 [
   {
-    "name": "New York",
-    "country": "United States",
-    "coordinates": {
-      "latitude": 40.7128,
-      "longitude": -74.006
-    }
+    "id": 1,
+    "city": "London",
+    "date": "2025-09-12",
+    "temperature": 21.3,
+    "humidity": 65,
+    "weather_condition": "Partly cloudy"
   },
-  // Additional cities...
+  // Additional weather records...
 ]
 ```
+
+### Admin Interface
+
+#### `/admin/`
+
+Django Admin interface for managing application data.
+
+- Requires admin credentials
+- Provides access to all database models and configurations
 
 ## Error Responses
 
@@ -134,11 +95,24 @@ There are currently no rate limits on the API endpoints. However, rate limits ar
 ### Curl Example
 
 ```bash
-# Get weather data for New York
-curl -X GET "http://localhost:8000/api/weather/New%20York/?days=3"
+# Get average temperature for London over 7 days
+curl -X GET "http://localhost:8000/api/weather/average?city=London&days=7"
 
-# Get average temperature for San Francisco
-curl -X GET "http://localhost:8000/api/weather/San%20Francisco/average/?days=7"
+# Get historical weather data
+curl -X GET "http://localhost:8000/api/weather/history"
+
+# Get historical weather data for a specific city
+curl -X GET "http://localhost:8000/api/weather/history?city=London"
+```
+
+### PowerShell Example
+
+```powershell
+# Get average temperature for London over 7 days
+Invoke-WebRequest -Uri "http://localhost:8000/api/weather/average?city=London&days=7" -Method GET
+
+# Get historical weather data
+Invoke-WebRequest -Uri "http://localhost:8000/api/weather/history" -Method GET
 ```
 
 ### Python Example
@@ -146,10 +120,15 @@ curl -X GET "http://localhost:8000/api/weather/San%20Francisco/average/?days=7"
 ```python
 import requests
 
-# Get weather data for London
-response = requests.get("http://localhost:8000/api/weather/London/?days=5")
+# Get average temperature for London over 7 days
+response = requests.get("http://localhost:8000/api/weather/average?city=London&days=7")
 weather_data = response.json()
-print(f"Average temperature in London: {weather_data['aggregated']['avg_temperature']}°C")
+print(f"Average temperature in London: {weather_data['average_temperature']}°C")
+
+# Get historical weather data
+response = requests.get("http://localhost:8000/api/weather/history")
+history_data = response.json()
+print(f"Number of historical records: {len(history_data)}")
 ```
 
 ## Related Documentation
