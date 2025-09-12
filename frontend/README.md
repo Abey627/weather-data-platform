@@ -44,4 +44,4 @@ docker-compose exec frontend npm test
 docker-compose exec frontend sh
 ```
 
-For a complete list of available commands, please refer to the [Docker Commands Reference](../docs/docker-commands.md) in the project root.
+For a complete list of available commands, please refer to the [Command Reference](../docs/reference/commands.md) in the project root.

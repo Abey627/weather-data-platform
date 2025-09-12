@@ -48,7 +48,7 @@ docker-compose exec backend python manage.py shell
 docker-compose exec backend bash
 ```
 
-For a complete list of available commands, please refer to the [Docker Commands Reference](../docs/docker-commands.md) in the project root.
+For a complete list of available commands, please refer to the [Command Reference](../docs/reference/commands.md) in the project root.
 
 ## API Documentation
 

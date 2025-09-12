@@ -1,9 +1,10 @@
-````markdown
-# ELK Stack Implementation Plan for Weather Data Platform
+# ELK Stack Implementation Guide
 
-This document outlines the detailed implementation plan for integrating the ELK Stack (Elasticsearch, Logstash, Kibana) with the Weather Data Platform for comprehensive logging, monitoring, and observability.
+This document outlines the implementation plan for integrating the ELK Stack (Elasticsearch, Logstash, Kibana) with the Weather Data Platform for comprehensive logging, monitoring, and observability.
 
-## 1. Architecture Overview
+> **Status: 📝 Planned** - ELK Stack implementation is planned but not yet started.
+
+## Architecture Overview
 
 ```
 ┌────────────────┐    ┌────────────────┐    ┌────────────────┐
@@ -20,9 +21,9 @@ This document outlines the detailed implementation plan for integrating the ELK 
                                             └────────────────┘
 ```
 
-## 2. Docker Configuration
+## Implementation Plan
 
-### 2.1 Update Docker Compose
+### 1. Docker Configuration
 
 Add the following services to `docker-compose.yml`:
 
@@ -75,7 +76,9 @@ volumes:
   elasticsearch-data:
 ```
 
-### 2.2 Create Required Directory Structure
+### 2. Directory Structure
+
+Create the required directory structure:
 
 ```
 elk/
@@ -88,9 +91,9 @@ elk/
     └── kibana.yml
 ```
 
-## 3. Logstash Configuration
+### 3. Logstash Configuration
 
-### 3.1 Basic Configuration (logstash.yml)
+#### Basic Configuration (logstash.yml)
 
 ```yaml
 # elk/logstash/config/logstash.yml
@@ -98,7 +101,7 @@ http.host: "0.0.0.0"
 xpack.monitoring.elasticsearch.hosts: ["http://elasticsearch:9200"]
 ```
 
-### 3.2 Pipeline Configuration (logstash.conf)
+#### Pipeline Configuration (logstash.conf)
 
 ```conf
 # elk/logstash/pipeline/logstash.conf
@@ -163,9 +166,9 @@ output {
 }
 ```
 
-## 4. Django Integration
+### 4. Django Integration
 
-### 4.1 Add Required Packages
+#### Required Packages
 
 Update `requirements.txt` to include:
 
@@ -174,7 +177,7 @@ python-logstash==0.4.8
 python-json-logger==2.0.7
 ```
 
-### 4.2 Update Django Settings
+#### Django Settings Update
 
 Add the following to `settings.py`:
 
@@ -226,7 +229,7 @@ LOGGING = {
 }
 ```
 
-### 4.3 Enhance Logging Context
+#### Logging Context Middleware
 
 Create a middleware to add request context to logs:
 
@@ -275,7 +278,7 @@ class RequestLoggingMiddleware(MiddlewareMixin):
         return ip
 ```
 
-Add the middleware to your settings:
+Add the middleware to Django settings:
 
 ```python
 MIDDLEWARE = [
@@ -284,35 +287,35 @@ MIDDLEWARE = [
 ]
 ```
 
-## 5. Kibana Dashboard Setup
+### 5. Kibana Dashboard Setup
 
 Once the ELK Stack is running, set up the following dashboards in Kibana:
 
-### 5.1 API Performance Dashboard
+#### API Performance Dashboard
 - Request rate over time
 - Average response time by endpoint
 - Status code distribution
 - Slowest API calls
 
-### 5.2 Error Monitoring Dashboard
+#### Error Monitoring Dashboard
 - Error rate over time
 - Top error messages
 - Errors by city/location
 - User impact (number of affected users)
 
-### 5.3 Weather Query Analysis
+#### Weather Query Analysis
 - Most queried cities
 - Query patterns over time
 - Average temperature trends
 - Query distribution by day of week/time of day
 
-### 5.4 System Health Dashboard
+#### System Health Dashboard
 - Cache hit/miss ratio
 - External API response times
 - Database query performance
 - System resource usage
 
-## 6. Alerting Setup
+### 6. Alerting Setup
 
 Configure alerts in Kibana for:
 
@@ -321,7 +324,59 @@ Configure alerts in Kibana for:
 3. External API failures (e.g., repeated failures to connect to weather API)
 4. Unusual query patterns (e.g., sudden spike in requests)
 
-## 7. Production Considerations
+## Implementation Steps
+
+1. **Set up ELK containers**:
+   ```bash
+   # Create required directories
+   mkdir -p elk/logstash/pipeline elk/logstash/config elk/kibana
+   
+   # Create configuration files
+   # (add the configurations described above)
+   
+   # Update docker-compose.yml
+   # (add the services described above)
+   
+   # Start the ELK stack
+   docker-compose up -d elasticsearch logstash kibana
+   ```
+
+2. **Update Django**:
+   ```bash
+   # Update requirements.txt
+   # (add the packages described above)
+   
+   # Create middleware
+   # (add the middleware described above)
+   
+   # Update settings.py
+   # (add the logging configuration described above)
+   ```
+
+3. **Verify Integration**:
+   ```bash
+   # Check if Elasticsearch is running
+   curl http://localhost:9200
+   
+   # Check if Kibana is running
+   curl http://localhost:5601
+   
+   # Restart the Django application
+   docker-compose restart backend
+   
+   # Generate some logs by accessing the API
+   curl http://localhost:8000/api/weather/average?city=London&days=5
+   
+   # Check if logs are appearing in Elasticsearch
+   curl http://localhost:9200/weather-api-*/_search?pretty
+   ```
+
+4. **Create Dashboards**:
+   - Access Kibana at http://localhost:5601
+   - Create index patterns for the weather-api-* indices
+   - Create visualizations and dashboards as described above
+
+## Production Considerations
 
 For production deployments:
 
@@ -331,9 +386,9 @@ For production deployments:
 4. **Backup**: Set up regular snapshots of Elasticsearch indices
 5. **Network Security**: Properly secure the ELK Stack with appropriate firewalls and access controls
 
-## 8. Documentation
+## Further Documentation
 
-Create the following documentation:
+Once implemented, create the following documentation:
 
 1. ELK Stack setup and configuration guide
 2. Dashboard usage guide with screenshots
@@ -341,4 +396,7 @@ Create the following documentation:
 4. Troubleshooting guide
 5. Log query examples for common scenarios
 
-````
+> **Legend:**  
+> ✅ Implemented - Feature is complete and working  
+> 🚧 In Progress - Feature is partially implemented  
+> 📝 Planned - Feature is planned but not yet implemented

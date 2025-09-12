@@ -1,27 +1,33 @@
-# Testing the Weather Data Platform Backend
+# Testing Guide
 
-This document describes the testing approach and infrastructure for the Weather Data Platform's backend.
+This document describes the testing approach, infrastructure, and procedures for the Weather Data Platform.
 
-## Overview
+## Testing Overview
 
 Our testing approach is guided by a few key principles:
 
-- **High Coverage**: We maintain 95%+ test coverage (currently at 98%)
+- **High Coverage**: We maintain 95%+ test coverage (currently at 98% for the backend)
 - **Isolation**: Tests don't depend on external services or state
 - **Speed**: Test suite runs quickly to encourage frequent testing
 - **Readability**: Tests serve as documentation
 - **Maintainability**: Tests are easy to update when requirements change
 
-## Quick Setup Guide
+## Backend Testing (✅ Implemented)
 
-### 1. Running Tests
+### Testing Stack
+
+- **Framework**: pytest with pytest-django
+- **Coverage**: pytest-cov
+- **Mocking**: unittest.mock
+- **Assertions**: pytest built-in assertions
+- **Contract Testing**: Custom JSON schema validators
+
+### Quick Setup Guide
+
+#### Running Tests
 
 ```bash
-# Using dev scripts (recommended)
-.\dev.ps1 test-backend    # Windows
-./dev.sh test-backend     # Linux/macOS
-
-# Directly with Docker
+# Using Docker Compose
 docker-compose exec backend pytest
 docker-compose exec backend pytest --cov=weather  # With coverage
 
@@ -31,7 +37,7 @@ docker-compose exec backend pytest weather/tests/test_views.py::TestWeatherAvera
 docker-compose exec backend pytest -m contract  # Only contract tests
 ```
 
-### 2. Test Configuration
+#### Test Configuration
 
 Our pytest configuration is in `backend/pytest.ini`:
 
@@ -43,7 +49,7 @@ markers =
     contract: marks tests as contract tests (run separately, makes real API calls)
 ```
 
-### 3. Test Structure
+### Test Structure
 
 Tests are organized in `weather/tests/`:
 
@@ -55,7 +61,7 @@ Tests are organized in `weather/tests/`:
 - `test_weather_client.py` - Tests for WeatherClient
 - `contract/` - Contract tests for external API integrations
 
-#### Test Organization Guidelines
+### Test Organization Guidelines
 
 To maintain consistency across our test suite:
 
@@ -70,8 +76,6 @@ To maintain consistency across our test suite:
    - Test method names should clearly describe what they're testing
    - Use docstrings to provide additional context
 
-## Writing Tests
-
 ### Key Pytest Features We Use
 
 - **Fixtures**: Reusable test components (see examples in `test_views.py`)
@@ -81,7 +85,7 @@ To maintain consistency across our test suite:
 - **pytest-django**: Django-specific testing utilities
 - **pytest-cov**: Coverage reporting
 
-### Testing Framework Standards
+### Framework Standards
 
 We use pytest as our primary testing framework with the following guidelines:
 
@@ -123,7 +127,7 @@ def test_weather_client(mock_get):
     # Test code here
 ```
 
-## Contract Testing
+### Contract Testing
 
 Contract tests validate our assumptions about external API responses:
 
@@ -141,6 +145,64 @@ docker-compose exec backend pytest -m contract
 
 Contract tests store API response schemas and sample responses in the `weather/tests/contract/contracts/` directory. When API responses change, these tests help identify exactly what changed.
 
+## Frontend Testing (📝 Planned)
+
+Once the frontend implementation begins, we plan to implement:
+
+### Testing Stack (Planned)
+
+- **Framework**: Jest
+- **Component Testing**: React Testing Library
+- **E2E Testing**: Cypress (potentially)
+
+### Planned Test Types
+
+1. **Unit Tests**: 
+   - Testing utility functions
+   - Testing hooks
+   - Testing state management
+
+2. **Component Tests**:
+   - Testing individual UI components
+   - Testing component rendering and interactions
+   - Testing component props and state
+
+3. **Integration Tests**:
+   - Testing component interaction
+   - Testing form submission flows
+   - Testing API integration
+
+### Frontend Test Structure (Planned)
+
+Tests will be organized alongside the components:
+
+```
+frontend/
+├── src/
+│   ├── components/
+│   │   ├── SearchForm/
+│   │   │   ├── SearchForm.js
+│   │   │   └── SearchForm.test.js  # Component test
+│   │   └── ...
+│   ├── utils/
+│   │   ├── dateUtils.js
+│   │   └── dateUtils.test.js       # Unit test
+│   └── ...
+└── cypress/                        # E2E tests (if implemented)
+```
+
+## Performance Testing (📝 Planned)
+
+We plan to implement performance testing to ensure the API can handle expected load:
+
+- **Load Testing**: Simulating multiple concurrent users
+- **Stress Testing**: Testing the system beyond normal operational capacity
+- **Endurance Testing**: Testing the system over an extended period
+
+Tools being considered:
+- Locust or JMeter for load testing
+- Benchmark tools for specific API endpoint performance testing
+
 ## CI/CD Integration
 
 - Regular tests run on every build
@@ -150,7 +212,34 @@ Contract tests store API response schemas and sample responses in the `weather/t
   - Manually before releases
   - When investigating integration issues
 
-## Future Improvements
+## Best Practices for Writing Tests
+
+1. **Descriptive Test Names**: Use clear, descriptive test names that explain what's being tested
+   ```python
+   def test_average_temperature_calculation_rounds_to_one_decimal():
+       # Test code
+   ```
+
+2. **Arrange-Act-Assert Pattern**: Structure tests with clear sections
+   ```python
+   def test_something():
+       # Arrange - set up test data
+       data = {...}
+       
+       # Act - call the function being tested
+       result = function_under_test(data)
+       
+       # Assert - verify the results
+       assert result == expected_output
+   ```
+
+3. **One Assertion Per Test**: Focus each test on verifying one thing
+
+4. **Use Test Data Factories**: Create helper functions for generating test data
+
+5. **Mock External Dependencies**: Don't rely on external services for unit tests
+
+## Future Testing Improvements
 
 1. Add more integration tests for the full request/response cycle
 2. Add performance tests for critical endpoints
@@ -158,3 +247,9 @@ Contract tests store API response schemas and sample responses in the `weather/t
 4. Add load testing for high-traffic scenarios
 5. Standardize remaining tests to use pytest consistently
 6. Refactor Django TestCase-based tests to use pytest fixtures
+7. Implement frontend testing suite once implementation begins
+
+> **Legend:**  
+> ✅ Implemented - Feature is complete and working  
+> 🚧 In Progress - Feature is partially implemented  
+> 📝 Planned - Feature is planned but not yet implemented

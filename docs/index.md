@@ -1,37 +1,57 @@
-````markdown
 # Weather Data Platform Documentation
 
-Welcome to the Weather Data Platform documentation. This document serves as a central index for all documentation files in the project.
+Welcome to the Weather Data Platform documentation. This document serves as a central navigation hub for all documentation in the project.
 
-## Project Overview
+## Quick Links
 
-- [Project Overview](./project-overview.md) - General information about the Weather Data Platform project, its features, and architecture.
+- [Getting Started Guide](./getting-started.md) - Quick setup instructions for new users
+- [Command Reference](./reference/commands.md) - All commands for development, testing, and deployment
+- [Project Status](./project/status.md) - Current project completion status (55%)
+
+## Documentation by Purpose
+
+### For New Users
+
+- [Getting Started Guide](./getting-started.md) - Setup instructions for new developers
+- [Architecture Overview](./architecture/overview.md) - High-level system architecture
+
+### For Developers
+
+- [Development Setup](./guides/development-setup.md) - Detailed development environment configuration
+- [Testing Guide](./guides/testing.md) - How to run and write tests
+- [Deployment Guide](./guides/deployment.md) - How to deploy to production
+
+### Reference Material
+
+- [Command Reference](./reference/commands.md) - All project commands
+- [API Reference](./reference/api.md) - Backend API documentation
+- [Configuration Reference](./reference/configuration.md) - Environment configuration options
 
 ## Component Documentation
 
-### Backend
+### Backend (✅ Implemented)
 
-- [Backend Documentation](./backend/README.md) - Details about the Django REST Framework backend, its API endpoints, and development instructions.
-- [Testing Documentation](./backend/testing.md) - Comprehensive information about backend testing approach, test coverage, and how to run tests.
+- [Backend Overview](./components/backend/overview.md) - Django REST Framework backend details
+- [API Endpoints](./components/backend/api.md) - API endpoint documentation
 
-### Frontend
+### Frontend (🚧 Planned)
 
-- [Frontend Documentation](./frontend/README.md) - Information about the React frontend application, its planned features, and development setup.
+- [Frontend Overview](./components/frontend/overview.md) - React frontend details
 
-## Project Planning
+## Project Management
 
-- [Project Plan](./project-planning/project-plan.md) - Detailed project plan with phases and tasks for the development of the Weather Data Platform.
+- [Project Status](./project/status.md) - Current completion status (55%)
+- [Project Plan](./project/plan.md) - Detailed development phases and tasks
 
-## Infrastructure
+## Infrastructure Documentation
 
-- [ELK Stack Implementation](./infrastructure/elk-stack-implementation.md) - Comprehensive guide for implementing the ELK Stack (Elasticsearch, Logstash, Kibana) for centralized logging and monitoring.
-
-## Development Resources
-
-- [Docker Commands Reference](./docker-commands.md) - Complete list of docker-compose commands for development, testing, and deployment.
+- [ELK Stack Implementation](./guides/elk-stack.md) - Logging and monitoring setup (📝 Planned)
 
 ## Additional Resources
 
-This documentation is part of the Weather Data Platform project. For the latest updates, please refer to the main [README.md](../README.md) in the project root.
+For the latest updates, please refer to the main [README.md](../README.md) in the project root.
 
-````
+> **Legend:**  
+> ✅ Implemented - Feature is complete and working  
+> 🚧 In Progress - Feature is partially implemented  
+> 📝 Planned - Feature is planned but not yet implemented

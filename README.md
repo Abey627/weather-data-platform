@@ -2,32 +2,40 @@
 
 A comprehensive weather data aggregation system built with React and Django REST Framework, featuring historical weather data analysis and visualization.
 
+> **Current Project Status:** 55% Complete - [View Detailed Status](./docs/project/status.md)
+
 ## Project Overview
 
 This project consists of a weather data aggregation API and frontend application that work together to:
 
-1. Fetch historical weather data from third-party APIs
-2. Process and analyze temperature data
-3. Display meaningful weather insights to users
+1. Fetch historical weather data from third-party APIs ✅
+2. Process and analyze temperature data ✅
+3. Display meaningful weather insights to users 🚧
 
 ## Key Features
 
-### Backend (Django REST Framework)
-- RESTful API to fetch and process weather data from external sources
-- Endpoint to calculate average temperature for any city over a specified number of days
-- API documentation with Swagger/OpenAPI
-- PostgreSQL for persistent data storage
-- Redis for efficient request caching
+### Backend (Django REST Framework) ✅
+- RESTful API to fetch and process weather data from external sources ✅
+- Endpoint to calculate average temperature for any city over a specified number of days ✅
+- API documentation with Swagger/OpenAPI ✅
+- PostgreSQL for persistent data storage ✅
+- Redis for efficient request caching ✅
 
-### Frontend (React)
-- User-friendly interface for city and time period selection
-- Display of average temperature results
-- Graceful handling of loading states and error messages
+### Frontend (React) 📝
+- User-friendly interface for city and time period selection 📝
+- Display of average temperature results 📝
+- Graceful handling of loading states and error messages 📝
 
 ### Infrastructure
-- Docker setup for both backend and frontend
-- Docker Compose for service orchestration
-- Comprehensive testing suite
+- Docker setup for both backend and frontend ✅
+- Docker Compose for service orchestration ✅
+- Comprehensive testing suite ✅
+- ELK Stack for centralized logging and monitoring 📝
+
+> **Legend:**  
+> ✅ Implemented - Feature is complete and working  
+> 🚧 In Progress - Feature is partially implemented  
+> 📝 Planned - Feature is planned but not yet implemented
 
 ## Repository Structure
 - `/backend` - Django REST Framework API
@@ -43,8 +51,9 @@ This project is designed for Docker-only development to ensure consistency and s
 
 - Docker
 - Docker Compose
+- Python (only needed to generate the initial Django secret key)
 
-No local installation of Python, Node.js, PostgreSQL, or Redis is required!
+Most dependencies are containerized, so no local installation of Node.js, PostgreSQL, or Redis is required.
 
 ### Getting Started
 
@@ -59,7 +68,7 @@ No local installation of Python, Node.js, PostgreSQL, or Redis is required!
    # Copy example .env file
    cp .env.example .env
    
-   # Generate a secure Django secret key
+   # Generate a secure Django secret key (requires Python)
    python scripts/generate_secret_key.py
    ```
    After generating the secret key, update it in your `.env` file. **Make sure to update all passwords and sensitive information in the `.env` file before proceeding.**
@@ -100,7 +109,7 @@ docker-compose exec backend pytest
 docker-compose exec backend bash
 ```
 
-For a complete list of available commands, please refer to the [Docker Commands Reference](./docs/docker-commands.md).
+For a complete list of available commands, please refer to the [Command Reference](./docs/reference/commands.md).
 
 ## Environment Configuration
 
@@ -144,12 +153,13 @@ For production deployment:
 
 The project documentation is organized in the `/docs` directory:
 
-- [Project Overview](./docs/project-overview.md) - Comprehensive overview of the project
-- [Backend Documentation](./docs/backend/README.md) - Backend API details and development guide
-- [Frontend Documentation](./docs/frontend/README.md) - Frontend application guide
-- [Project Plan](./docs/project-planning/project-plan.md) - Development phases and task tracking
-- [ELK Stack Implementation](./docs/infrastructure/elk-stack-implementation.md) - Monitoring setup guide
 - [Documentation Index](./docs/index.md) - Complete documentation directory
+- [Project Overview](./docs/project/overview.md) - Comprehensive overview of the project
+- [Architecture Documentation](./docs/architecture/overview.md) - System architecture details
+- [Backend Guide](./docs/components/backend/overview.md) - Backend API details and development guide
+- [Frontend Guide](./docs/components/frontend/overview.md) - Frontend application guide
+- [Command Reference](./docs/reference/commands.md) - All Docker and development commands
+- [Infrastructure Guide](./docs/components/infrastructure/overview.md) - Deployment and monitoring setup
 
 For API documentation, visit the endpoints when the backend is running:
 - Swagger UI: http://localhost:8000/swagger/
