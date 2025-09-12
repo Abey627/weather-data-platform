@@ -56,21 +56,18 @@ No local installation of Python, Node.js, PostgreSQL, or Redis is required!
 
 2. Set up environment variables:
    ```bash
-   # On Linux/macOS
-   ./scripts/setup_env.sh
+   # Copy example .env file
+   cp .env.example .env
    
-   # On Windows PowerShell
-   .\scripts\setup_env.ps1
+   # Generate a secure Django secret key
+   python scripts/generate_secret_key.py
    ```
-   This will create a `.env` file from the `.env.example` template. **Make sure to update all passwords and sensitive information in the `.env` file before proceeding.**
+   After generating the secret key, update it in your `.env` file. **Make sure to update all passwords and sensitive information in the `.env` file before proceeding.**
 
 3. Start the development environment:
    ```bash
-   # On Linux/macOS
-   ./dev.sh up
-   
-   # On Windows PowerShell
-   .\dev.ps1 up
+   # Start all services
+   docker-compose up -d
    ```
 
 4. Access the services:
@@ -81,33 +78,29 @@ No local installation of Python, Node.js, PostgreSQL, or Redis is required!
 
 ### Development Commands
 
-Use our convenient scripts to manage the development environment:
+Use the following Docker commands to manage the development environment:
 
 ```bash
 # Start all services
-./dev.sh up      # Linux/macOS
-.\dev.ps1 up     # Windows
+docker-compose up -d
 
 # Stop all services
-./dev.sh down    # Linux/macOS
-.\dev.ps1 down   # Windows
+docker-compose down
 
 # Run Django migrations
-./dev.sh migrate # Linux/macOS
-.\dev.ps1 migrate # Windows
+docker-compose exec backend python manage.py migrate
 
 # View logs
-./dev.sh logs    # Linux/macOS
-.\dev.ps1 logs   # Windows
+docker-compose logs -f
 
 # Run tests
-./dev.sh test-backend  # Linux/macOS
-.\dev.ps1 test-backend # Windows
+docker-compose exec backend pytest
 
 # Open a shell in the container
-./dev.sh bash-backend  # Linux/macOS
-.\dev.ps1 bash-backend # Windows
+docker-compose exec backend bash
 ```
+
+For a complete list of available commands, please refer to the [Docker Commands Reference](./docs/docker-commands.md).
 
 ## Environment Configuration
 

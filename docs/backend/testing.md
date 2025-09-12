@@ -2,115 +2,38 @@
 
 This document describes the testing approach and infrastructure for the Weather Data Platform's backend.
 
-## Test Coverage
+## Overview
 
-The backend has a comprehensive test suite with 98% code coverage as of September 12, 2025. This ensures that the application is robust and behaves as expected under various conditions.
+Our testing approach is guided by a few key principles:
 
-### Coverage Report
+- **High Coverage**: We maintain 95%+ test coverage (currently at 98%)
+- **Isolation**: Tests don't depend on external services or state
+- **Speed**: Test suite runs quickly to encourage frequent testing
+- **Readability**: Tests serve as documentation
+- **Maintainability**: Tests are easy to update when requirements change
 
-```
-Name                                        Stmts   Miss  Cover
----------------------------------------------------------------
-weather/__init__.py                             0      0   100%
-weather/admin.py                                8      0   100%
-weather/apps.py                                 4      0   100%
-weather/integration/__init__.py                 0      0   100%
-weather/integration/clients/__init__.py         0      0   100%
-weather/integration/clients/geocoding.py       32      2    94%
-weather/integration/clients/weather.py         20      2    90%
-weather/integration/services/__init__.py        0      0   100%
-weather/integration/services/geocoding.py       7      0   100%
-weather/integration/services/weather.py        69      8    88%
-weather/migrations/0001_initial.py              5      0   100%
-weather/migrations/__init__.py                  0      0   100%
-weather/models.py                              11      0   100%
-weather/serializers.py                         17      0   100%
-weather/urls.py                                 3      0   100%
-weather/utils/__init__.py                       0      0   100%
-weather/utils/cache_utils.py                    5      0   100%
-weather/utils/constants.py                      9      0   100%
-weather/utils/date_utils.py                     5      0   100%
-weather/utils/error_handlers.py                15      0   100%
-weather/views.py                               44      0   100%
----------------------------------------------------------------
-TOTAL                                         642     13    98%
-```
+## Quick Setup Guide
 
-## Test Structure
-
-The tests are organized in a modular structure under the `weather/tests/` directory:
-
-- `test_models.py`: Tests for the WeatherData model
-- `test_views.py`: Tests for the API views
-- `test_weather_service.py`: Tests for the WeatherService
-- `test_geocoding_service.py`: Tests for the GeocodingService
-- `test_utils.py`: Tests for utility functions (date_utils, cache_utils, error_handlers)
-- `test_weather_client.py`: Tests for the WeatherClient
-- `contract/`: Contract tests for external API integrations
-
-## Running Tests
-
-Tests are run using pytest. The project is configured with pytest-django to handle Django-specific testing needs and pytest-cov for coverage reports.
-
-### Running All Tests
-
-To run all tests:
+### 1. Running Tests
 
 ```bash
-# On Linux/macOS
-./dev.sh test-backend
+# Using dev scripts (recommended)
+.\dev.ps1 test-backend    # Windows
+./dev.sh test-backend     # Linux/macOS
 
-# On Windows PowerShell
-.\dev.ps1 test-backend
-```
-
-Alternatively, you can run the tests directly in the backend container:
-
-```bash
-# Run all tests
+# Directly with Docker
 docker-compose exec backend pytest
+docker-compose exec backend pytest --cov=weather  # With coverage
 
-# Run tests with coverage report
-docker-compose exec backend pytest --cov=weather
-```
-
-### Running Specific Tests
-
-To run specific test files or classes:
-
-```bash
-# Run a specific test file
+# Running specific tests
 docker-compose exec backend pytest weather/tests/test_views.py
-
-# Run a specific test class
 docker-compose exec backend pytest weather/tests/test_views.py::TestWeatherAverageView
-
-# Run a specific test method
-docker-compose exec backend pytest weather/tests/test_views.py::TestWeatherAverageView::test_successful_response
+docker-compose exec backend pytest -m contract  # Only contract tests
 ```
 
-### Running Contract Tests
+### 2. Test Configuration
 
-Contract tests make actual API calls to external services. They should be run separately from regular unit tests:
-
-```bash
-# Run only contract tests
-docker-compose exec backend pytest -m contract
-
-# Run contract tests for a specific API
-docker-compose exec backend pytest weather/tests/contract/test_weather_api_contract.py
-```
-
-These tests verify that our expectations of external API responses match reality. They should be run:
-- After external APIs announce changes
-- Periodically (e.g., monthly) to detect unannounced changes
-- Before major releases to ensure compatibility
-
-Contract tests store the API response schema and a sample response in the `weather/tests/contract/contracts/` directory. When API responses change, these tests help identify exactly what changed.
-
-## Test Configuration
-
-The testing configuration is in `backend/pytest.ini`:
+Our pytest configuration is in `backend/pytest.ini`:
 
 ```ini
 [pytest]
@@ -120,36 +43,118 @@ markers =
     contract: marks tests as contract tests (run separately, makes real API calls)
 ```
 
-## Mocking External Services
+### 3. Test Structure
 
-The tests use Python's `unittest.mock` to mock external services like the weather and geocoding APIs. This ensures that tests can run without making actual network requests and provides consistent test results.
+Tests are organized in `weather/tests/`:
+
+- `test_models.py` - Tests for the WeatherData model
+- `test_views.py` - Tests for API views
+- `test_weather_service.py` - Tests for WeatherService
+- `test_geocoding_service.py` - Tests for GeocodingService
+- `test_utils.py` - Tests for utility functions
+- `test_weather_client.py` - Tests for WeatherClient
+- `contract/` - Contract tests for external API integrations
+
+#### Test Organization Guidelines
+
+To maintain consistency across our test suite:
+
+1. **File Organization**: Each test file should focus on testing a specific component type:
+   - Model tests go in `test_models.py`
+   - View/API endpoint tests go in `test_views.py`
+   - Client tests go in `test_*_client.py`
+   - Service tests go in `test_*_service.py`
+
+2. **Naming Conventions**:
+   - Prefer pytest-style class names: `TestClassName` (not `ClassNameTests`)
+   - Test method names should clearly describe what they're testing
+   - Use docstrings to provide additional context
+
+## Writing Tests
+
+### Key Pytest Features We Use
+
+- **Fixtures**: Reusable test components (see examples in `test_views.py`)
+- **Parametrization**: Test multiple scenarios with a single function
+- **Markers**: Categorize tests (e.g., `@pytest.mark.contract`)
+- **Class organization**: Group related tests within a class
+- **pytest-django**: Django-specific testing utilities
+- **pytest-cov**: Coverage reporting
+
+### Testing Framework Standards
+
+We use pytest as our primary testing framework with the following guidelines:
+
+1. **Framework Preference**: 
+   - Use pytest for all new tests
+   - Prefer pytest fixtures over setUp/tearDown methods
+   - Use pytest.mark decorators for test categorization
+
+2. **Mocking Approach**:
+   - Use `unittest.mock.patch` consistently for mocking
+   - Prefer fixture-based mocks when possible
+   - Document complex mocking setups with comments
+
+3. **Test Independence**:
+   - Each test should be independent and not rely on the state from other tests
+   - Use fixtures to set up and tear down test data
+   - Reset any global state between tests
+
+### Test Patterns by Component
+
+| Component | What to Test |
+|-----------|--------------|
+| **Models** | Validation logic, model methods, default values |
+| **Views** | Response codes, valid/invalid inputs, auth checks |
+| **Services/Clients** | Error handling, retry logic, edge cases |
+| **Utilities** | Edge cases, input variations |
+
+### Mocking External Services
+
+Use `unittest.mock` to isolate tests from external dependencies:
+
+```python
+@patch('weather.integration.clients.weather.requests.get')
+def test_weather_client(mock_get):
+    mock_response = MagicMock()
+    mock_response.json.return_value = {'example': 'data'}
+    mock_get.return_value = mock_response
+    
+    # Test code here
+```
 
 ## Contract Testing
 
-Contract testing is our approach to validate that our assumptions about external API responses remain valid over time. 
+Contract tests validate our assumptions about external API responses:
 
-Each contract test:
-1. Makes a real API call to the external service
-2. Validates the response against our expected schema
-3. Stores the response for future reference
-4. Reports detailed information about any schema changes
+1. They make real API calls to external services
+2. Validate responses against expected schemas
+3. Should be run:
+   - After external APIs announce changes
+   - Periodically (monthly) to detect unannounced changes
+   - Before major releases
 
-If an API changes, the contract tests identify exactly what changed, making it easier to update our code.
+```bash
+# Run contract tests
+docker-compose exec backend pytest -m contract
+```
 
-## Integration with CI/CD
+Contract tests store API response schemas and sample responses in the `weather/tests/contract/contracts/` directory. When API responses change, these tests help identify exactly what changed.
 
-The regular unit tests are automatically run as part of the CI/CD pipeline. A build will fail if any tests fail or if the coverage drops below a certain threshold.
+## CI/CD Integration
 
-Contract tests are not run in the regular CI/CD pipeline due to their dependence on external services. Instead, they are run:
-- On a scheduled basis (e.g., weekly)
-- Manually before major releases
-- When investigating integration issues
+- Regular tests run on every build
+- Builds fail if tests fail or coverage drops below threshold
+- Contract tests run:
+  - On a scheduled basis (weekly)
+  - Manually before releases
+  - When investigating integration issues
 
-## Future Test Improvements
+## Future Improvements
 
-Areas for future test enhancement:
-
-1. Add more integration tests that test the full request/response cycle
+1. Add more integration tests for the full request/response cycle
 2. Add performance tests for critical endpoints
 3. Expand contract testing to cover more edge cases
 4. Add load testing for high-traffic scenarios
+5. Standardize remaining tests to use pytest consistently
+6. Refactor Django TestCase-based tests to use pytest fixtures

@@ -26,6 +26,10 @@ Welcome to the Weather Data Platform documentation. This document serves as a ce
 
 - [ELK Stack Implementation](./infrastructure/elk-stack-implementation.md) - Comprehensive guide for implementing the ELK Stack (Elasticsearch, Logstash, Kibana) for centralized logging and monitoring.
 
+## Development Resources
+
+- [Docker Commands Reference](./docker-commands.md) - Complete list of docker-compose commands for development, testing, and deployment.
+
 ## Additional Resources
 
 This documentation is part of the Weather Data Platform project. For the latest updates, please refer to the main [README.md](../README.md) in the project root.

@@ -23,40 +23,32 @@ This project is designed for Docker-only development to ensure consistency and s
 From the project root:
 
 ```bash
-# On Linux/macOS
-./dev.sh backend
-
-# On Windows PowerShell
-.\dev.ps1 backend
+# Start the backend service along with PostgreSQL and Redis
+docker-compose up -d backend db redis
 ```
-
-This starts the backend service along with PostgreSQL and Redis.
 
 ### Development Commands
 
-Use our convenient scripts to manage the development environment:
+Use the following Docker commands to manage the backend:
 
 ```bash
 # Run Django migrations
-./dev.sh migrate     # Linux/macOS
-.\dev.ps1 migrate    # Windows
+docker-compose exec backend python manage.py migrate
 
 # View backend logs
-./dev.sh logs-backend    # Linux/macOS
-.\dev.ps1 logs-backend   # Windows
+docker-compose logs -f backend
 
 # Run backend tests
-./dev.sh test-backend    # Linux/macOS
-.\dev.ps1 test-backend   # Windows
+docker-compose exec backend pytest
 
 # Open a Django shell
-./dev.sh shell           # Linux/macOS
-.\dev.ps1 shell          # Windows
+docker-compose exec backend python manage.py shell
 
 # Open a bash shell in the backend container
-./dev.sh bash-backend    # Linux/macOS
-.\dev.ps1 bash-backend   # Windows
+docker-compose exec backend bash
 ```
+
+For a complete list of available commands, please refer to the [Docker Commands Reference](../docs/docker-commands.md) in the project root.
 
 ## API Documentation
 

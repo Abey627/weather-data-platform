@@ -25,29 +25,23 @@ This project is designed for Docker-only development to ensure consistency and s
 From the project root:
 
 ```bash
-# On Linux/macOS
-./dev.sh frontend
-
-# On Windows PowerShell
-.\dev.ps1 frontend
+# Start the frontend service with hot reloading enabled
+docker-compose up -d frontend
 ```
-
-This starts the frontend service with hot reloading enabled.
 
 ### Development Commands
 
-Use our convenient scripts to manage the development environment:
+Use the following Docker commands to manage the frontend:
 
 ```bash
 # View frontend logs
-./dev.sh logs-frontend    # Linux/macOS
-.\dev.ps1 logs-frontend   # Windows
+docker-compose logs -f frontend
 
 # Run frontend tests
-./dev.sh test-frontend    # Linux/macOS
-.\dev.ps1 test-frontend   # Windows
+docker-compose exec frontend npm test
 
 # Open a shell in the frontend container
-./dev.sh bash-frontend    # Linux/macOS
-.\dev.ps1 bash-frontend   # Windows
+docker-compose exec frontend sh
 ```
+
+For a complete list of available commands, please refer to the [Docker Commands Reference](../docs/docker-commands.md) in the project root.

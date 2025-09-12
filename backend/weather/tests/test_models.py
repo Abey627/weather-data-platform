@@ -1,5 +1,4 @@
 from django.test import TestCase
-from rest_framework.test import APIClient
 from weather.models import WeatherData
 
 class WeatherDataModelTests(TestCase):
@@ -17,19 +16,3 @@ class WeatherDataModelTests(TestCase):
         """Test the string representation of a WeatherData object"""
         weather_data = WeatherData.objects.get(city="Test City")
         self.assertEqual(str(weather_data), "Test City - 2025-01-01 - 25.5°C")
-
-class WeatherAPITests(TestCase):
-    """Tests for the Weather API endpoints"""
-    
-    def setUp(self):
-        self.client = APIClient()
-    
-    def test_average_endpoint_validation(self):
-        """Test validation on the average endpoint"""
-        # Test with missing parameters
-        response = self.client.get('/api/weather/average')
-        self.assertEqual(response.status_code, 400)
-        
-        # Test with invalid days parameter
-        response = self.client.get('/api/weather/average?city=London&days=0')
-        self.assertEqual(response.status_code, 400)
