@@ -9,7 +9,7 @@ class WeatherClient:
     """Client for fetching weather data from Open-Meteo API"""
     
     @staticmethod
-    def get_historical_weather(latitude, longitude, start_date, end_date):
+    def get_historical_weather(latitude, longitude, start_date, end_date, _skip_cache=False):
         """
         Fetch historical weather data for specific coordinates and date range
         
@@ -18,6 +18,7 @@ class WeatherClient:
             longitude (float): Longitude of the location
             start_date (str): Start date in YYYY-MM-DD format
             end_date (str): End date in YYYY-MM-DD format
+            _skip_cache (bool, optional): If True, bypass the cache (used for contract testing)
             
         Returns:
             dict: Weather API response data
@@ -48,5 +49,9 @@ class WeatherClient:
                 logger.error(f"Error fetching weather data: {str(e)}")
                 raise Exception(f"Error fetching weather data: {str(e)}")
         
+        # Skip cache if requested (for contract testing)
+        if _skip_cache:
+            return fetch_weather_data()
+            
         # Use the cache manager to get or set the data
         return CacheManager.get_or_set(cache_key, fetch_weather_data, timeout=CACHE_TIMEOUT_HOUR)

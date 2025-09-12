@@ -17,8 +17,11 @@ show_help() {
     echo "  logs          View logs of all services"
     echo "  logs-backend  View logs of the backend service"
     echo "  logs-frontend View logs of the frontend service"
+    echo "  makemigrations Create new Django migrations"
+    echo "  check-migrations Check if migrations are needed"
     echo "  migrate       Run Django migrations"
     echo "  test-backend  Run backend tests"
+    echo "  test-backend-coverage Run backend tests with coverage report"
     echo "  test-frontend Run frontend tests"
     echo "  shell         Open a Django shell"
     echo "  bash-backend  Open a bash shell in the backend container"
@@ -52,11 +55,28 @@ case "$1" in
     logs-frontend)
         docker-compose logs -f frontend
         ;;
+    makemigrations)
+        docker-compose exec backend python manage.py makemigrations
+        ;;
+    check-migrations)
+        echo "Checking for model changes that require new migrations..."
+        docker-compose exec backend python manage.py makemigrations --check
+        
+        echo -e "\nChecking for pending migrations that need to be applied..."
+        docker-compose exec backend python manage.py showmigrations
+        ;;
     migrate)
+        echo "Checking for model changes first..."
+        docker-compose exec backend python manage.py makemigrations --check
+        
+        echo -e "\nApplying migrations..."
         docker-compose exec backend python manage.py migrate
         ;;
     test-backend)
         docker-compose exec backend pytest
+        ;;
+    test-backend-coverage)
+        docker-compose exec backend pytest --cov=weather
         ;;
     test-frontend)
         docker-compose exec frontend npm test

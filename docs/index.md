@@ -12,6 +12,7 @@ Welcome to the Weather Data Platform documentation. This document serves as a ce
 ### Backend
 
 - [Backend Documentation](./backend/README.md) - Details about the Django REST Framework backend, its API endpoints, and development instructions.
+- [Testing Documentation](./backend/testing.md) - Comprehensive information about backend testing approach, test coverage, and how to run tests.
 
 ### Frontend
 

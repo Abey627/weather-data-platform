@@ -19,6 +19,7 @@ This project consists of a weather data aggregation API and frontend application
 - API documentation with Swagger/OpenAPI
 - PostgreSQL for persistent data storage
 - Redis for efficient request caching
+- Comprehensive test suite with 98% code coverage
 
 ### Frontend (React)
 - User-friendly interface for city and time period selection
@@ -102,6 +103,10 @@ Use our convenient scripts to manage the development environment:
 # Run tests
 ./dev.sh test-backend  # Linux/macOS
 .\dev.ps1 test-backend # Windows
+
+# Run tests with coverage report
+./dev.sh test-backend-coverage  # Linux/macOS
+.\dev.ps1 test-backend-coverage # Windows
 
 # Open a shell in the container
 ./dev.sh bash-backend  # Linux/macOS

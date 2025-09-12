@@ -1,0 +1,35 @@
+{
+  "latitude": 40.710335,
+  "longitude": -73.99309,
+  "generationtime_ms": 0.05602836608886719,
+  "utc_offset_seconds": -14400,
+  "timezone": "America/New_York",
+  "timezone_abbreviation": "GMT-4",
+  "elevation": 27.0,
+  "daily_units": {
+    "time": "iso8601",
+    "temperature_2m_max": "\u00b0C"
+  },
+  "daily": {
+    "time": [
+      "2025-09-05",
+      "2025-09-06",
+      "2025-09-07",
+      "2025-09-08",
+      "2025-09-09",
+      "2025-09-10",
+      "2025-09-11",
+      "2025-09-12"
+    ],
+    "temperature_2m_max": [
+      28.7,
+      30.0,
+      20.3,
+      23.8,
+      23.0,
+      22.9,
+      27.1,
+      27.1
+    ]
+  }
+}

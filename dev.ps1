@@ -15,8 +15,11 @@ function Show-Help {
     Write-Host "  logs          View logs of all services"
     Write-Host "  logs-backend  View logs of the backend service"
     Write-Host "  logs-frontend View logs of the frontend service"
+    Write-Host "  makemigrations Create new Django migrations"
+    Write-Host "  check-migrations Check if migrations are needed"
     Write-Host "  migrate       Run Django migrations"
     Write-Host "  test-backend  Run backend tests"
+    Write-Host "  test-backend-coverage Run backend tests with coverage report"
     Write-Host "  test-frontend Run frontend tests"
     Write-Host "  shell         Open a Django shell"
     Write-Host "  bash-backend  Open a bash shell in the backend container"
@@ -50,11 +53,28 @@ switch ($args[0]) {
     "logs-frontend" {
         docker-compose logs -f frontend
     }
+    "makemigrations" {
+        docker-compose exec backend python manage.py makemigrations
+    }
+    "check-migrations" {
+        Write-Host "Checking for model changes that require new migrations..."
+        docker-compose exec backend python manage.py makemigrations --check
+        
+        Write-Host "`nChecking for pending migrations that need to be applied..."
+        docker-compose exec backend python manage.py showmigrations
+    }
     "migrate" {
+        Write-Host "Checking for model changes first..."
+        docker-compose exec backend python manage.py makemigrations --check
+        
+        Write-Host "`nApplying migrations..."
         docker-compose exec backend python manage.py migrate
     }
     "test-backend" {
         docker-compose exec backend pytest
+    }
+    "test-backend-coverage" {
+        docker-compose exec backend pytest --cov=weather
     }
     "test-frontend" {
         docker-compose exec frontend npm test

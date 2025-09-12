@@ -1,6 +1,6 @@
 from django.test import TestCase
 from rest_framework.test import APIClient
-from .models import WeatherData
+from weather.models import WeatherData
 
 class WeatherDataModelTests(TestCase):
     """Tests for the WeatherData model"""

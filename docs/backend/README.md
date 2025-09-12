@@ -10,6 +10,7 @@ This directory contains the Django REST Framework backend for the Weather Data P
 - PostgreSQL database integration
 - Redis caching
 - Swagger/OpenAPI documentation
+- Comprehensive test suite with 98% code coverage
 
 ## API Endpoints
 
@@ -50,6 +51,10 @@ Use our convenient scripts to manage the development environment:
 ./dev.sh test-backend    # Linux/macOS
 .\dev.ps1 test-backend   # Windows
 
+# Run backend tests with coverage report
+./dev.sh test-backend-coverage    # Linux/macOS
+.\dev.ps1 test-backend-coverage   # Windows
+
 # Open a Django shell
 ./dev.sh shell           # Linux/macOS
 .\dev.ps1 shell          # Windows
@@ -66,5 +71,9 @@ API documentation is available at:
 - ReDoc: `http://localhost:8000/redoc/`
 
 When the server is running, access these URLs to view and interact with the API documentation.
+
+## Testing
+
+The backend has a comprehensive test suite with 98% code coverage. For detailed information about testing, see [Testing Documentation](testing.md).
 
 ````
