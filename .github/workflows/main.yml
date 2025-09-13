@@ -47,15 +47,15 @@ jobs:
       - name: Wait for backend to be ready
         run: |
           for i in {1..30}; do
-            if docker-compose -f docker-compose.prod.yml exec backend curl -s http://localhost:8000/ > /dev/null; then
-              echo "Backend is up!"
+            if docker-compose -f docker-compose.prod.yml exec backend curl -s http://localhost:8000/api/weather/health/ | grep -q OK; then
+              echo "Backend healthcheck passed!"
               break
             fi
-            echo "Waiting for backend... ($i)"
+            echo "Waiting for backend healthcheck... ($i)"
             sleep 2
           done
-          if ! docker-compose -f docker-compose.prod.yml exec backend curl -s http://localhost:8000/ > /dev/null; then
-            echo "Backend did not start in time."; exit 1
+          if ! docker-compose -f docker-compose.prod.yml exec backend curl -s http://localhost:8000/api/weather/health/ | grep -q OK; then
+            echo "Backend healthcheck did not pass in time."; exit 1
           fi
       - name: Run tests in backend container
         run: |
