@@ -19,8 +19,8 @@ RUN pip wheel --no-cache-dir --no-deps --wheel-dir /app/wheels -r requirements.t
 # Final stage
 FROM python:3.10-slim
 
-WORKDIR /app
 
+WORKDIR /app
 # Create a non-root user
 RUN addgroup --system app && adduser --system --group app
 
@@ -35,6 +35,9 @@ RUN pip install --no-cache /wheels/*
 
 # Copy project
 COPY . .
+
+# Change to backend directory for Django commands
+WORKDIR /app/backend
 
 # Collect static files
 RUN python manage.py collectstatic --noinput
