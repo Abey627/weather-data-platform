@@ -1,0 +1,32 @@
+services:
+  - type: web
+    name: weather-api
+    env: docker
+    dockerfilePath: ./backend/Dockerfile
+    envVars:
+      - key: DJANGO_DEBUG
+        value: false
+      - key: DJANGO_SECRET_KEY
+        sync: false
+      - key: ALLOWED_HOSTS
+        value: "*.onrender.com,your-custom-domain.com"
+      - key: DATABASE_URL
+        fromDatabase:
+          name: weather-db
+          property: connectionString
+      - key: REDIS_URL
+        fromService:
+          name: weather-redis
+          type: redis
+          property: connectionString
+    healthCheckPath: /weather/health/
+  
+  - type: redis
+    name: weather-redis
+    ipAllowList: []
+    plan: free
+  
+  - type: postgresql
+    name: weather-db
+    ipAllowList: []
+    plan: free
