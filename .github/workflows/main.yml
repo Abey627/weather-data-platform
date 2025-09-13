@@ -23,6 +23,11 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
+      - name: Install Docker Compose
+        run: |
+          sudo curl -L "https://github.com/docker/compose/releases/download/v2.24.6/docker-compose-$(uname -s)-$(uname -m)" -o /usr/local/bin/docker-compose
+          sudo chmod +x /usr/local/bin/docker-compose
+          docker-compose version
       - name: Generate .env.prod from secrets
         run: |
           echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env.prod
@@ -35,8 +40,6 @@ jobs:
           echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env.prod
           echo "DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }}" >> .env.prod
           echo "ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}" >> .env.prod
-          echo "PGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_DEFAULT_EMAIL }}" >> .env.prod
-          echo "PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }}" >> .env.prod
           echo "MAX_DAYS_ALLOWED=${{ secrets.MAX_DAYS_ALLOWED }}" >> .env.prod
       - name: Set up Docker Compose
         run: |
