@@ -6,7 +6,7 @@ This document provides the current status of the Weather Data Platform project. 
 
 ## Latest Update
 
-The backend service has been successfully tested and is ready for deployment to Render. All production configurations have been completed, including HTTPS settings, static files, and health check endpoints. The render.yaml file has been created and configured properly. We're now working on adding CORS support for frontend integration before the final deployment.
+The backend service has been successfully tested and is ready for deployment to Render. All production configurations have been completed, including HTTPS settings, static files, and health check endpoints. The render.yaml file has been created and configured properly. We're proceeding with deployment to Render's free tier for testing and validation purposes. Once deployed, we'll evaluate performance and determine if an upgrade to a paid tier is necessary for production use.
 
 ## Component Status Dashboard
 
@@ -43,13 +43,14 @@ The backend service has been successfully tested and is ready for deployment to 
 - ✅ Set up CI/CD workflows for Docker
 - ❌ Add database backup and restore procedures
 
-### Phase 4.2: Production Deployment (80% Complete)
+### Phase 4.2: Production Deployment (85% Complete)
 - ✅ Select deployment platform (Render)
 - ✅ Create platform configuration (render.yaml)
 - ✅ Configure static files with Whitenoise
 - ✅ Implement HTTPS security settings
 - ✅ Create health check endpoint
 - ✅ Configure database and Redis connections
+- ✅ Select tier for initial deployment (Free tier for testing)
 - ❌ Implement CORS for frontend integration
 - ❌ Complete final deployment to Render
 
@@ -90,9 +91,10 @@ The backend service has been successfully tested and is ready for deployment to 
 The following items are the immediate priorities for development:
 
 1. **Complete Production Deployment (Phase 4.2)**
+   - Deploy backend to Render on free tier
+   - Test and monitor performance metrics
    - Add django-cors-headers for frontend integration
-   - Test deployment configuration locally
-   - Deploy backend to Render
+   - Evaluate if free tier meets requirements or if upgrade is needed
 
 2. **Complete Database Integration (Phase 2.1)**
    - Implement data pruning strategy
