@@ -8,5 +8,5 @@ gunicorn>=21.2.0
 jsonschema>=4.17.3,<5.0.0
 whitenoise>=6.5.0
 dj-database-url>=1.0.0
-
 pytest>=7.0.0,<8.0.0
+pytest-django>=4.5.2,<5.0.0
