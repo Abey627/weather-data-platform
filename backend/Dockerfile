@@ -33,8 +33,9 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
 COPY --from=builder /app/wheels /wheels
 RUN pip install --no-cache /wheels/*
 
-# Copy backend project
-COPY backend/ ./backend/
+
+# Copy all backend files
+COPY . .
 
 # Change to backend directory for Django commands
 WORKDIR /app/backend
