@@ -7,30 +7,15 @@ on:
     branches: [main]
 
 jobs:
-  build-test:
+  backend-build-test:
     runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:14
-        env:
-          POSTGRES_DB: weather_db
-          POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: change_this_password
-        ports:
-          - 5432:5432
-        options: >-
-          --health-cmd "pg_isready -U postgres" --health-interval 10s --health-timeout 5s --health-retries 5
-      redis:
-        image: redis:7
-        ports:
-          - 6379:6379
     env:
       DATABASE_NAME: weather_db
       DATABASE_USER: postgres
       DATABASE_PASSWORD: change_this_password
-      DATABASE_HOST: localhost
+      DATABASE_HOST: db
       DATABASE_PORT: 5432
-      REDIS_HOST: localhost
+      REDIS_HOST: redis
       REDIS_PORT: 6379
       DJANGO_SECRET_KEY: test-secret-key
       DJANGO_DEBUG: False
@@ -38,22 +23,34 @@ jobs:
     steps:
       - name: Checkout code
         uses: actions/checkout@v4
-      - name: Set up Python
-        uses: actions/setup-python@v5
-        with:
-          python-version: '3.10'
-      - name: Install dependencies
+      - name: Generate .env.prod from secrets
         run: |
-          python -m pip install --upgrade pip
-          pip install -r backend/requirements.txt
-      - name: Run tests with pytest
+          echo "DATABASE_NAME=${{ secrets.DATABASE_NAME }}" >> .env.prod
+          echo "DATABASE_USER=${{ secrets.DATABASE_USER }}" >> .env.prod
+          echo "DATABASE_PASSWORD=${{ secrets.DATABASE_PASSWORD }}" >> .env.prod
+          echo "DATABASE_HOST=${{ secrets.DATABASE_HOST }}" >> .env.prod
+          echo "DATABASE_PORT=${{ secrets.DATABASE_PORT }}" >> .env.prod
+          echo "REDIS_HOST=${{ secrets.REDIS_HOST }}" >> .env.prod
+          echo "REDIS_PORT=${{ secrets.REDIS_PORT }}" >> .env.prod
+          echo "DJANGO_SECRET_KEY=${{ secrets.DJANGO_SECRET_KEY }}" >> .env.prod
+          echo "DJANGO_DEBUG=${{ secrets.DJANGO_DEBUG }}" >> .env.prod
+          echo "ALLOWED_HOSTS=${{ secrets.ALLOWED_HOSTS }}" >> .env.prod
+          echo "PGADMIN_DEFAULT_EMAIL=${{ secrets.PGADMIN_DEFAULT_EMAIL }}" >> .env.prod
+          echo "PGADMIN_DEFAULT_PASSWORD=${{ secrets.PGADMIN_DEFAULT_PASSWORD }}" >> .env.prod
+          echo "MAX_DAYS_ALLOWED=${{ secrets.MAX_DAYS_ALLOWED }}" >> .env.prod
+      - name: Set up Docker Compose
         run: |
-          pip install pytest
-          export DJANGO_SETTINGS_MODULE=weatherapi.settings
-          pytest backend/
-      - name: Build Docker image
+          docker-compose -f docker-compose.prod.yml up --build -d
+      - name: Wait for backend to be ready
         run: |
-          docker build -f backend/Dockerfile -t weather-data-platform .
+          sleep 20
+      - name: Run tests in backend container
+        run: |
+          docker-compose -f docker-compose.prod.yml exec backend pytest
+      - name: Tear down Docker Compose
+        if: always()
+        run: |
+          docker-compose -f docker-compose.prod.yml down
       - name: Deploy to Render (if build passes)
         if: github.ref == 'refs/heads/main' && success()
         run: |
