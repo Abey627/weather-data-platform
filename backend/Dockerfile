@@ -37,8 +37,8 @@ RUN pip install --no-cache /wheels/*
 # Copy all backend files
 COPY . .
 
-# Change to backend directory for Django commands
-WORKDIR /app/backend
+# Set working directory to /app where manage.py is located
+WORKDIR /app
 
 # Collect static files
 RUN python manage.py collectstatic --noinput
